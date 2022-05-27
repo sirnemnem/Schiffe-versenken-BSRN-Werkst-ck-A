@@ -658,9 +658,23 @@ def playerVsPlayer():
     player2 = Player(playerName)
 
     # Spieler 1 soll seine Shiffe in seinem Field platzieren
-    placeShips(player1)
+    showMsg('Player 1, do you want to set the boats automatically or manually?')
+    choice = print_menu2()
+    if choice == "automatically":
+        player1.placeShipsAuto()
+        showMsg('Your Ships have been placed')
+    elif choice == "manually":
+        showMsg('Player 2, please look away')
+        placeShips(player1)
 
-    placeShips(player2)
+    showMsg('Player 2, do you want to set the boats automatically or manually?')
+    choice = print_menu2()
+    if choice == "automatically":
+        player2.placeShipsAuto()
+        showMsg('Your Ships have been placed')
+    elif choice == "manually":
+        showMsg('Player 1, please look away')
+        placeShips(player2)
 
     # startet das Spiel zwischen zwei Spieler
     startGame([player1, player2])
