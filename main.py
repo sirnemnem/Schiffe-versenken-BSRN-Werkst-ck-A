@@ -717,7 +717,7 @@ def playerVsCpu():
     y = 1
     subwin.addstr(y, 1, 'Player: {} is placing his ships'.format(cpu.getName()))
     y+=1 
-    subwin.addstr(y, 1, 'click to continue')
+    subwin.addstr(y, 1, 'Press any button to continue')
     # Die For-Schleife unten wurde während Debuging benutzt, um
     # ' zu sehen, ob der CPU seine Schiffe korrekt im Feld positioniert hat
     # Bitte 'uncomment' die Zeilen um zu sehen
@@ -887,7 +887,7 @@ def main(stdscr):
         elif choice == 'player 1 vs player 2':
             # Abruf der Methode, die für den "Player1 vs Player2"-Spielmodus zuständig ist
             playerVsPlayer()
-        elif choice == 'exit':
+        elif choice == 'exit to windows':
             # Abruf der Methode, die für das Beenden des Spieles zuständig ist
             endGame()
             break
