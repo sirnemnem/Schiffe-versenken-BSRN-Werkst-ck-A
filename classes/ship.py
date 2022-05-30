@@ -1,12 +1,12 @@
-class Ship:
+class Schiff:
 
-    def __init__(self, id, name, size):
+    def __init__(self, id, name, Größe):
         self.id = id
         self.name = name
-        self.size = size
-        # the automatic "state of ship" is not hit (True)
-        self.state = True
-        self.hits = 0
+        self.Größe = Größe
+        # the automatic "Status of Schiff" is not hit (True)
+        self.Status = True
+        self.Treffer = 0
         # save positions to list
         self.position = list()
 
@@ -23,23 +23,23 @@ class Ship:
     def setName(self, name):
         self.name = name
 
-    def getSize(self):
-        return self.size
+    def getGröße(self):
+        return self.Größe
 
-    def setSize(self, size):
-        self.size = size
+    def setGröße(self, Größe):
+        self.Größe = Größe
 
-    def getState(self):
-        return self.state
+    def getStatus(self):
+        return self.Status
 
-    def setState(self, state):
-        self.state = state
+    def setStatus(self, Status):
+        self.Status = Status
 
-    def getHits(self):
-        return self.hits
+    def getTreffer(self):
+        return self.Treffer
 
-    def setHits(self, hits):
-        self.hits = hits
+    def setTreffer(self, Treffer):
+        self.Treffer = Treffer
 
     def getPosition(self):
         return self.position
@@ -47,13 +47,13 @@ class Ship:
     def setPosition(self, position):
         self.position = position
 
-    def gotDirectHit(self):
-        self.hits += 1
+    def gotdirektTreffer(self):
+        self.Treffer += 1
         # prüfen, ob die Anzahl der Schläge die Größe des Schiffes "beinhalten"
-        if self.getHits() >= self.getSize():
+        if self.getTreffer() >= self.getGröße():
             # falls ja, dazu hinweisen, dass ein Schiff zerstört wurde
-            self.state = False
+            self.Status = False
 
-    def placeShip(self, place):
-        # Add place to the end of the list
-        self.position.append(place)
+    def SchiffPlatzieren(self, platz):
+        # Add platz to the end of the list
+        self.position.append(platz)
