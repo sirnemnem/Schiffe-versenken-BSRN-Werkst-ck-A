@@ -24,8 +24,9 @@ WELCOME_HEADER = 'Schiffe versenken'
 CHOICE_HEADER = 'Make your Choice'
 WELCOME_FOOTER = 'arrow keys to navigate | enter to select'
 
-menu = ['Player vs CPU', 'Player 1 vs Player 2', 'Exit to Windows']
+menu1 = ['Player vs CPU', 'Player 1 vs Player 2', 'Exit to Windows']
 menu2 = ['Automatically', 'Manually']
+menu3 = ['Yes', 'No']
 
 def forceMinWindowSize():
     # Terminal Größe zurückgeben
@@ -659,7 +660,7 @@ def playerVsPlayer():
 
     # Spieler 1 soll seine Shiffe in seinem Field platzieren
     showMsg('Player 1, do you want to set the boats automatically or manually?')
-    choice = print_menu2()
+    choice = print_menu(menu2)
     if choice == "automatically":
         player1.placeShipsAuto()
         showMsg('Your Ships have been placed')
@@ -668,7 +669,7 @@ def playerVsPlayer():
         placeShips(player1)
 
     showMsg('Player 2, do you want to set the boats automatically or manually?')
-    choice = print_menu2()
+    choice = print_menu(menu2)
     if choice == "automatically":
         player2.placeShipsAuto()
         showMsg('Your Ships have been placed')
@@ -691,7 +692,7 @@ def playerVsCpu():
     
     showMsg('Do you want to set the boats automatically or manually?')
     player = Player(playerName)
-    choice = print_menu2()
+    choice = print_menu(menu2)
     if choice == "automatically":
         player.placeShipsAuto()
         showMsg('Your Ships have been placed')
@@ -740,10 +741,16 @@ def playerVsCpu():
 
 def endGame():
     # Falls der Benutzer Exit aussucht, soll die untrige Nachricht angezeigt werden
-    showMsg('you want to end the game')
+    showMsg('Are you sure you want to end the game?')
+    choice = print_menu(menu3)
+    if choice == "yes":
+            # Spiel wird mit Exit Funktion beendet
+        exit()
+    elif choice == 'no':
+            # Spieler kehrt zum Hauptmenü zurück
+        ()
 
-
-def print_menu():
+def print_menu(menuvar):
 
     currentIndex = 0
 
@@ -756,7 +763,7 @@ def print_menu():
         # Schreiben der Menuelemente vertikal ab der Zeile 1 und Spalte 1,
         # weil der Rand der Subwin die erste Zeile und Spalte besitzt
 
-        for index, element in enumerate(menu):
+        for index, element in enumerate(menuvar):
 
             # 'das ausgewählte Element soll mit der Farbe (Schwarz auf Weiß) geschrieben werden
 
@@ -785,7 +792,7 @@ def print_menu():
             # Falls der Benutzer 'Pfeil-nach-oben' Taste gedrückt hat
             # Currentindex inkrementieren solange das erste Element nicht erreicht wurde
             currentIndex = currentIndex - 1
-        elif key == curses.KEY_DOWN and currentIndex < len(menu) - 1:
+        elif key == curses.KEY_DOWN and currentIndex < len(menuvar) - 1:
             # Falls der Benutzer Pfeil-nach-unten Taste gedrückt hat
             # Currentindex inkrementieren solange das letzte Element nicht erreicht wurde
             currentIndex = currentIndex + 1
@@ -802,69 +809,7 @@ def print_menu():
     del subwin
     del window
 
-    return menu[currentIndex].lower()
-
-def print_menu2():
-
-    currentIndex = 0
-
-    while 1:
-
-        # Erstellung von Zwei Window Objekte
-        # Window hat Kopf- und Fußzeile
-        window, subwin = createDisplay2()
-
-        # Schreiben der Menuelemente vertikal ab der Zeile 1 und Spalte 1,
-        # weil der Rand der Subwin die erste Zeile und Spalte besitzt
-
-        for index, element in enumerate(menu2):
-
-            # 'das ausgewählte Element soll mit der Farbe (Schwarz auf Weiß) geschrieben werden
-
-            if index == currentIndex:
-                # Farbe an
-                subwin.attron(curses.color_pair(1))
-                # 'ausgewälte element mit farbe schreiben
-                subwin.addstr(index + 1, 1, element)
-                # Farbe aus
-                subwin.attroff(curses.color_pair(1))
-            else:
-                # die nicht ausgewählte Menu-Elemente bekommen keine Farbe
-                subwin.addstr(index + 1, 1, element)
-
-        # Aktualisierung um die Änderungen zu sehen
-        window.refresh()
-        subwin.refresh()
-
-        # Eingabe der Benutzer ablesen
-        key = window.getch()
-
-        window.clear()
-        subwin.clear()
-
-        if key == curses.KEY_UP and currentIndex > 0:
-            # Falls der Benutzer 'Pfeil-nach-oben' Taste gedrückt hat
-            # Currentindex inkrementieren solange das erste Element nicht erreicht wurde
-            currentIndex = currentIndex - 1
-        elif key == curses.KEY_DOWN and currentIndex < len(menu2) - 1:
-            # Falls der Benutzer Pfeil-nach-unten Taste gedrückt hat
-            # Currentindex inkrementieren solange das letzte Element nicht erreicht wurde
-            currentIndex = currentIndex + 1
-        elif key == curses.KEY_ENTER or key in [10, 13]:
-            # Falls der Benutzer 'Eingabe-Taste' gedrückt hat
-            window.clear()
-            subwin.clear()
-
-            window.refresh()
-            subwin.refresh()
-
-            break
-
-    del subwin
-    del window
-
-    return menu2[currentIndex].lower()
-
+    return menuvar[currentIndex].lower()
 
 def main(stdscr):
 
@@ -879,7 +824,7 @@ def main(stdscr):
 
         # Diese Methode ermöglicht dem Benutzer einen Spielmodus auszuwählen
         # Der Rückgabewert (String) wird klein geschrieben
-        choice = print_menu()
+        choice = print_menu(menu1)
 
         if choice == "player vs cpu":
             # Abruf der Methode, die für den "Player vs Cpu"-Spielmodus zuständig ist
@@ -890,7 +835,6 @@ def main(stdscr):
         elif choice == 'exit to windows':
             # Abruf der Methode, die für das Beenden des Spieles zuständig ist
             endGame()
-            break
 
         
 
