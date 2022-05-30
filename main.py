@@ -24,7 +24,7 @@ WILKOMMENS_HEADER = 'Schiffe versenken'
 WAHL_HEADER = 'Make your Choice'
 WILKOMMENS_FOOTER = 'Pfeiltasten zum navigieren benutzen | Entertaste zum auswählen benutzen'
 
-menu1 = ['Spieler vs CPU', 'Spieler 1 vs Spieler 2', 'Zurückkehren zu Windows']
+menu1 = ['Spieler vs CPU', 'Spieler 1 vs Spieler 2', 'Schließe das Spiel']
 menu2 = ['Automatisch', 'Manuell']
 menu3 = ['Ja', 'Nein']
 
@@ -785,7 +785,7 @@ def main(stdscr):
     curses.curs_set(0)
 
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
-    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_RED)
+    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)
 
     while 1:
         # unendliche Schleife, weil das Programm nur dann aufhören soll, wenn der Benutzer "Exit" auswählt
@@ -800,7 +800,7 @@ def main(stdscr):
         elif choice == 'spieler 1 vs spieler 2':
             # Abruf der Methode, die für den "Player1 vs Player2"-Spielmodus zuständig ist
             SpielerVsSpieler()
-        elif choice == 'zurückkehren zu windows':
+        elif choice == 'schließe das spiel':
             # Abruf der Methode, die für das Beenden des Spieles zuständig ist
             SpielBeenden()
 
