@@ -21,7 +21,6 @@ MIN_HEIGHT = 30
 MIN_WIDTH = 90
 
 WILKOMMENS_HEADER = 'Schiffe versenken'
-WAHL_HEADER = 'Make your Choice'
 WILKOMMENS_FOOTER = 'Pfeiltasten zum navigieren benutzen | Entertaste zum auswählen benutzen'
 
 menu1 = ['Spieler vs CPU', 'Spieler 1 vs Spieler 2', 'Schließe das Spiel']
@@ -29,24 +28,24 @@ menu2 = ['Automatisch', 'Manuell']
 menu3 = ['Ja', 'Nein']
 
 def MinFensterGröße():
-    # Terminal Größe zurückgeben
+    # Mindestgröße von Terminal wird User angezeigt
     msg = 'Min terminal Größe ist {} x {}'.format(MIN_WIDTH, MIN_HEIGHT)
 
     while 1:
 
         window = curses.initscr()
         window.clear()
-        # Größe der x- und y-Achse des Terminals berechnen
+        # x- und y-Achse der Terminalgröße wird  berechnt
         height, width = window.getmaxyx()
         # Mitte des Terminals berechnen
         y_pos, x_pos = max(height//2, 0), max(width//2 - len(msg)//2, 0)
 
-        # Falls die Größe großer als das min ist, (kann man mit dem Spiel anfangen)
+        # Wenn Terminalgröße ausreichend ist, kann man Spiel ausführen
         if height >= MIN_HEIGHT and width >= MIN_WIDTH:
             break
         
-        # Wenn die Terminalgröße kleiner als das min ist,
-        # dann wird in der Mitte des Terminals die Nachricht (msg) ausgegeben
+        # Wenn die Mindestgröße nicht erreicht wurde,
+        # wird in der Mitte des Terminals die Nachricht (msg) ausgegeben
         window.addstr(y_pos, x_pos, msg)
         window.refresh()
         window.getch()
@@ -60,40 +59,40 @@ def MinFensterGröße():
 
 
 def DisplayErstellen(header=WILKOMMENS_HEADER, footer=WILKOMMENS_FOOTER):
-    # sicherstellen, dass Terminal die min. Größe und Breite erfüllt
+    # sicherstellen, dass Mindestgröße für Terminal erfüllt ist
     MinFensterGröße()
 
-    # *** erstellt ein Window-Objekt, welches der ganzen Komanndozeile repräsentiert
+    # *** erstellt ein Window-Objekt, welches der ganzen Kommandozeile repräsentiert
     window = curses.initscr()
 
     #  Ablesen der Höhe und Breite der Kommandozeile
     height, width = window.getmaxyx()
 
-    # Die Kopfzeile soll ganz oben stehen
+    # Kopfzeile steht ganz oben
     y_cor = 0
-    # Die Kopfzeile soll in der Mitte stehen
+    # Kopfzeile soll mittig ausgegeben werden
     x_cor = width//2 - len(WILKOMMENS_HEADER)//2
 
-    # Die Farbe 2 (Schwarz auf Red) wird eingeschaltet
+    # Farbe 2(Schwarz auf Grün) wird eingeschaltet
     window.attron(curses.color_pair(2))
-    # Kopfzeile wird in der Mitte geschriebn
+    # Kopfzeile wird in der Mitte ausgegeben
     window.addstr(y_cor, x_cor, WILKOMMENS_HEADER)
 
-    #  Die Farbe 2 (Schwarz auf Red) wird ausgeschaltet
+    # Farbe 2 (Schwarz auf Grün) wird ausgeschaltet
     window.attroff(curses.color_pair(2))
 
-    # Die Fußzeile soll in der letzten Zeile geschrieben werden
+    # Fußzeile soll in der letzten Zeile, ganz unten, ausgegeben werden
     window.addstr(height-1, 0, footer)
 
-    # Erstellen einer Fenster-Objekt, der von größten Window-Objekt abgeleitet wird
-    # Sub win soll 2 Zeilen und 2 Spalten kleiner als Window- Objekt sein
+    # Erstellen eines Fenster-Objekt, welches vom größten Window-Objekt abgeleitet wird
+    # Sub win soll 2 Zeilen und 2 Spalten kleiner als das Window- Objekt sein
     subwin = window.derwin(height-2, width-2, 1, 1)
     subwin.box()
-    # window und subwin zurückgeben
+    # window und subwin werden zurückgeliefert
     return (window, subwin)
 
 
-# '' diese Methode sorgt dazu, dass der abgegebene Text in der mitte vom fenster steht
+# '' diese Methode sorgt dafür, dass der vorher angegebene Text in der Mitte des Fenster ausgegeben wird
 def NachrichtZeigen(msg=''):
 
     window, subwin = DisplayErstellen()
@@ -119,57 +118,57 @@ def getSpielerName(spieler=1, msg=''):
     name = ''
     footer = 'Geben Sie ihren Namen ein: '
 
-    # echo Methode einschalten
-    curses.echo()
-    # Mauszeiger einschalten, sodass man sehen kann, wo man eintippt
+    # echo Methode wird eingeschaltet, sodass User sehen kann, was eingetippt wird
+    curses.echo(1)
+    # Mauszeiger wird eingeschaltet, sodass User sehen kann, wo eingetippt wird
     curses.curs_set(1)
 
     while 1:
-        # Erstellung von zwei Fenster-Objekte
+        # zwei Fenster-Objekte werden erstellt
         window, subwin = DisplayErstellen(footer=footer)
 
         # gibt ein Tuple zurück (Höhe, Breite)
         height, width = window.getmaxyx()
 
-        # String ab dem Punk (y=1,x=1) im Subwin schreiben, der den Name des Spielers zurückgibt
+        # String ab dem Punkt x,y=(1|1) im Subwin schreiben, welcher den Namen des Spielers zurückliefert
         subwin.addstr(
-            1, 1, '{}Geben Sie einen Namen für Spieler Nummer {} an'.format(msg, spieler))
+            1, 1, '{}Geben Sie einen Namen für Spieler {} an'.format(msg, spieler))
 
-        # Akktualisierung um die Änderungen zu sehen
+        # Akktualisierung des Fensters um Änderungen sehen zu können
         window.refresh()
         subwin.refresh()
 
-        # Die Eingabe gesteht in der Fußzeile
+        # Die Eingabe steht in der Fußzeile
         y = height-1
-        # '' Da die Fußzeile schon beschriften wurde, soll das Program
+        # '' Da die Fußzeile schon beschriftet wurde, soll das Program
         # die Beschriftung ausweichen
         x = len(footer)
 
         # Alle Buchstaben (Zeichenkette) vor der Eingabe der Enter-Taste lesen
         name = window.getstr(y, x).decode().strip().upper()
 
-        # Fenster-Obkjekte sauber machen
+        # Fenster-Obkjekte leer machen
         window.clear()
         subwin.clear()
 
-        # Die Objekte löschen
+        # Objekte werden gelöscht
         del window
         del subwin
 
-        # der Name darf nicht leer sein
-        # Schleife so lange wiederholen lassen, bis der eingegebene Name gültig ist
+        # Name des Users darf nicht leer sein
+        # Schleife so lange laufen lassen, bis der eingegebene Name des Users gültig ist
         if len(name) > 0 and name != curses.KEY_RESIZE:
             break
 
-    # echoing ausschalten
+    # echo wird ausgeschaltet
     curses.noecho()
-    # Mauszeiger aussschalten, wird nicht mehr sichtbar
+    # Mauszeiger wird ausgeschaltet, nicht mehr sichtbar für User
     curses.curs_set(0)
 
     return name
 
 
-# diese Methode dient zur "Grafischen Darstellung" des Spiels
+# "Grafische Darstellung" des Spiels für den User wird in dieser Methode festgelegt
 def FeldZiehen(SpielerFeld, footer, hideSchiffe=True, alignment='center'):
 
     # Erstellung von Window und Subwin
@@ -177,34 +176,34 @@ def FeldZiehen(SpielerFeld, footer, hideSchiffe=True, alignment='center'):
     height, width = window.getmaxyx()
     h, w = subwin.getmaxyx()
 
-    # Höhe und Breite von Feld erstellen
+    # Höhe und Breite von Feld wird festgelegt
     gridHeight = SpielerFeld.getHeight() * 2
     gridWidth = SpielerFeld.getWidth() * 4
 
-    # '' wo wir den Feld platzieren in der subwin
+    # '' wo das Feld im subwin platziert wird
     grid_begin_y = h//2 - gridHeight//2
     grid_begin_x = w//2 - gridWidth//2
 
-    # ''* bein. wo das Feld im subwin platziert wird
+    # ''* wo das Feld im subwin platziert wird nach Abfrage links oder rechts
     if alignment.lower() == 'rechts':
         grid_begin_x = w - gridWidth - 2
     elif alignment.lower() == 'links':
         grid_begin_x = 2
 
-    #'  Erstellung eines Feldes in sder
+    #'  Erstellung eines Feldes im sder
     grid = subwin.derwin(gridHeight, gridWidth, grid_begin_y, grid_begin_x)
 
     gridHeight, gridWidth = grid.getmaxyx()
 
-    #' Jede 4 Spalte beginnen von der 3 Spalte ist ein '|'
+    #' Alle 4 Spalten beginnt von der 3. Spalte ein '|'
     for x in range(3, gridWidth - 1, 4):
         grid.vline(0, x, '|', gridHeight - 1)
 
-    # 'Jede 2 Zeile beginnen von der 1 Zeile ist ein '-'
+    # 'Alle 2 Zeilen beginnt von der 1. Zeile ein '-'
     for y in range(1, gridHeight - 1, 2):
         grid.hline(y, 0, '-', gridWidth)
 
-    # Die (erste) For-Schleife dient zur "Stelleneingabe" des Fields
+    # Die (erste) For-Schleife dient zur "Stelleneingabe" des Feldes
     # in jeder 4 Stelle soll die Referenz ausgegeben werden
     for x in range(0, gridWidth - 1, 4):
         for y in range(0, gridHeight - 1, 2):
@@ -213,22 +212,22 @@ def FeldZiehen(SpielerFeld, footer, hideSchiffe=True, alignment='center'):
             value = SpielerFeld.getValueByRef(posRef)
 
             # hideSchiffe == True
-            # ' falls die Schiffe nicht im Feld gezeigt werden sollen
+            # ' falls die Schiffe nicht im Feld angezeigt werden sollen
             if hideSchiffe:
-                # ' während des Spiels werden die Positionen von Schiff nie gezeigt
-                # Referenz (zB: 'A10'), 'X' oder '#' ausgeben
+                # ' während des Spiels werden die Positionen von den Schiffen nicht gezeigt
+                # Referenz (zB: 'A10'), 'X' oder '#' wird ausgegeben, falls Treffer oder nicht
                 txt = posRef
                 if value in ['X', '#']:
                     txt = value
 
-            # ' falls die Schiffe ins Feld gezeigt werden sollen
+            # ' falls die Schiffe im Feld angezeigt werden sollen
             else:
                 # falls kein Schiff vorliegt
                 if value in ['O', 'X', '#']:
                     # Referenz ausgeben
                     txt = posRef
 
-                #falls Schiff vorliegt
+                #falls ein Schiff vorliegt
                 else:
                     # Id zeigen
                     txt = value.getId()
@@ -237,7 +236,7 @@ def FeldZiehen(SpielerFeld, footer, hideSchiffe=True, alignment='center'):
             # zB: 'A1' oder 'A10'
             grid.addstr(y, x, '%3s' % txt)
     
-    # # Feld mit Farbe Cyan verferben
+    # Feld in Farbe Grün ausgeben
     grid.bkgd(' ', curses.color_pair(2))
 
     return (window, subwin, grid)
@@ -245,13 +244,12 @@ def FeldZiehen(SpielerFeld, footer, hideSchiffe=True, alignment='center'):
 
 def PositionsCheck(SpielerFeld, x, y):
 
-    # diese Methode prüft, ob ein Punkt im Feld als Ziel
-    # gültig sein kann
+    # diese Methode prüft, ob der Schusspunkt des Zieles im Feld liegt
 
     w = SpielerFeld.getWidth()
     h = SpielerFeld.getHeight()
 
-    # ' Prüft ob x und y im Spielfeld liegen
+    # Prüft ob X- und Y-Koordinaten im Spielfeld liegen
     if x not in range(0, w) or y not in range(0, h):
         return False
 
@@ -274,22 +272,22 @@ def PositionsCheck(SpielerFeld, x, y):
     if y - 1 >= 0:
         if SpielerFeld.getValueByCor(x, y-1) != 'O':
             return False
-    # dieser Platz ist möglich
+    # falls nein ist der Platz möglich und somit besetzbar
     return True
 
 
 def checkSchiffsPlatz(SpielerFeld, start, end, Größe):
 
-    # ob Start und Ende aus min 2 Buchstaben und max 3 Buchstaben bestehen
-    # wenn ja, nächste Bedingung prüfen
-    # wenn nein, False zurückgeben
+    # ob Start und Ende der Eingabe aus min 2 Buchstaben und max 3 Buchstaben bestehen
+    # falls ja, nächste Bedingung überprüfen
+    # falls nein, false zurückgeben
     if len(start) not in range(2, 4) or len(end) not in range(2, 4):
         return False
 
     # prüfen ob ein Platz-Referenz vorkommt, zB: A1 in ['A1','A3','C4']
     if start in SpielerFeld.getPositions() and end in SpielerFeld.getPositions():
 
-        # Platzreferenz auf x- und y-koordinaten abbilden
+        # Platzreferenz auf X- und Y-Koordinaten abbilden auf dem Feld
         start_x, start_y = SpielerFeld.decodePosition(start)
         end_x, end_y = SpielerFeld.decodePosition(end)
 
@@ -302,60 +300,63 @@ def checkSchiffsPlatz(SpielerFeld, start, end, Größe):
                 end_y = start_y
                 start_y = tmp
 
-            # Ob der Platzbereich für ein Schiff ausreicht
-            # 1 von Schiffgröße substrahieren, weil wir von 0 anfangen
+            # überprüfen ob der Platzbereich für ein Schiff ausreicht
+            # 1 von Schiffsgröße substrahieren, weil wir von 0 anfangen
             if end_y - start_y == Größe - 1:
                 for y in range(start_y, end_y + 1):
-                    # alle Plätze im Bereich püfen
-                    # ob die Plätze schon vergeben sind
+                    # überprüfen ob Plätze im Bereich frei oder besetzt sind
                     if(not PositionsCheck(SpielerFeld, start_x, y)):
                         return False
                 return True
 
-        # wenn es um eine Zeile angeht, die Y-Koordinate ist konstant
+        # wenn es um eine Zeile geht, die Y-Koordinate ist konstant
         elif start_y == end_y:
 
+            # sicherstellen, dass der kleinste Wert im Start und größte Wert im Ende steht
             if end_x < start_x:
                 tmp = end_x
                 end_x = start_x
                 start_x = tmp
 
+            # überprüfen ob der Platzbereich für ein Schiff ausreicht
+            # 1 von Schiffsgröße substrahieren, weil wir von 0 anfangen
             if end_x - start_x == Größe - 1:
                 for x in range(start_x, end_x + 1):
+                    # überprüfen ob Plätze im Bereich frei oder besetzt sind
                     if not PositionsCheck(SpielerFeld, x, start_y):
                         return False
                 return True
-    # Falls keine Bedingung erfüllt wurde
+    # Falls keine Bedingung erfüllt wurde false
     return False
     
 
 def SchiffePlatzieren(spieler):
 
-    # echo, sodass Spieler sehen kann, was er eingibt
+    # echo Methode wird eingeschaltet, sodass User sehen kann, was eingetippt wird
     curses.echo()
-    # Schaltet Mousezeigen ein, sodass der Spieler sehen kann, wo er text eingibt
+    # Mauszeiger wird eingeschaltet, sodass User sehen kann, wo eingetippt wird
     curses.curs_set(1)
 
-    # Die Schiffe von diesem Spieler in playerSchiffe speichern
-    # Schiffe sind in einem Python dict gespeichert, wo Schlüssel
-    # die Id des Schiffes uns der Wert das Schiff selbst
+    # Schiffe vom Spieler in playerSchiffe speichern
+    # Id des Schiffes und der Wert des Schiffes selbst werden in einem Python dict gespeichert
+
     SpielerSchiffe = spieler.getSchiffe().values()
-    # alle schiffe durchgehen
+    # alle Schiffe durchgehen
     for schiff in SpielerSchiffe:
         footer = 'Geben Sie die Position für das Schiff ein (bsp.: A1:A4 = von A1 bis A4): '
 
         while 1:
-            # das akktualisierte Feld des Spielers abrufen und in playerFeld
+            # das aktualisierte Feld des Spielers abrufen und in playerFeld anzeigen
             SpielerFeld = spieler.getField()
 
-            # das Spielfield, wo der Spieler seine Schiffe plazieren kann, uaf dem Bildschirm zeigen
+            # das Spielfield, wo der Spieler seine Schiffe plazieren kann, auf dem Bildschirm ausgeben
             window, subwin, grid = FeldZiehen(
                 SpielerFeld, footer, False, 'rechts')
 
-            # Groeße von Kommandozeile ermitteln
+            # Größe von Kommandozeile ermitteln
             height, width = window.getmaxyx()
 
-            # Zeigen welches Schiff plazieren werden soll
+            # Schiffsdaten von Schiffen, welche platziert werden sollen, anzeigen 
             subwin.addstr(
                 1, 1, 'Spieler: {}, platzieren Sie ihr Schiff im Feld.'.format(spieler.getName()))
             subwin.addstr(2, 1, 'Schiffs ID: {}'.format(schiff.getId()))
@@ -366,7 +367,7 @@ def SchiffePlatzieren(spieler):
             subwin.refresh()
             grid.refresh()
 
-            # nur höchstens 7 Buchstaben einzugeben erlauben
+            # Eingabe von höchstens 7 Buchstaben erlaubt
             coordinates = window.getstr(
                 height - 1, len(footer), 7).decode().strip().upper()
 
@@ -378,23 +379,23 @@ def SchiffePlatzieren(spieler):
             del subwin
             del window
 
-            # prüfen ob der eingebene Text ':' beinhaltet und min Länge 5 ist
-            # wenn ja die nächsten Bedingungen prüfen
-            # wenn nein Fehlermeldung zeigen
+            # überprüfen ob der eingebene Text ':' beinhaltet und Mindestlänge 5 ist
+            # falls ja nächste Bedingungen überprüfen
+            # falls nein Fehlermeldung anzeigen
             if(':' in coordinates and len(coordinates) > 4):
 
-                # Text bei dem ':' in 2 Teile teilen, das Likne Teil ist der Start
-                # und das rechte ist End des Bereiches
+                # Text ab dem ':' in 2 Teile teilen, der linke Teil ist der Start
+                # und der rechte das Ende des Bereiches
                 start, end = tuple(coordinates.split(':', 1))
 
-                # prüfen ob die Regeln für Plazierung eingehalten wurden
-                # wenn ja, Schiff da stellen
-                # wenn nein, diese Platze ignorieren, und Fehlermeldun zeigen
+                # prüfen ob die Bedingungen für Plazierung eingehalten wurden
+                # falls ja, Schiff platzieren
+                # falls nein, diese Platze ignorieren, und Fehlermeldung zeigen
                 if checkSchiffsPlatz(SpielerFeld, start, end, schiff.getGröße()):
 
                     start_x, start_y = SpielerFeld.decodePosition(start)
                     end_x, end_y = SpielerFeld.decodePosition(end)
-                    # sicher stellen dass Ausgangpunkt kleiner als Endepunkt
+                    # sicherstellen, dass Ausgangspunkt kleiner ist als Endpunkt
                     if end_y < start_y:
                         tmp = end_y
                         end_y = start_y
@@ -405,18 +406,18 @@ def SchiffePlatzieren(spieler):
                         end_x = start_x
                         start_x = tmp
 
-                    # Platze mit diesem Schiff besetzen
+                    # Plätze mit diesem Schiff belegen
                     for x in range(start_x, end_x + 1):
                         for y in range(start_y, end_y + 1):
-                            # Wert der Postion mit Schiff Objekt ersetzen
+                            # Wert des Platzes mit Schiff-Objekt ersetzen
                             spieler.getField().setValueByCor(x, y, schiff)
-                            # das Schiff mit diser Id in diesem Platz legen
+                            # Schiff mit besagter Id auf diesen Platz setzen
                             spieler.getSchiffe()[schiff.getId()].SchiffPlatzieren(
                                 SpielerFeld.encodePosition(x, y))
 
                     break
 
-            # Fehlermeldung Ergänzen
+            # Fehlermeldung, falls Eingabe falsch ist
             footer = 'Position ist nicht valide! Geben Sie die Position für das Schiff ein (bsp.: A1:A4 = von A1 bis A4): '
 
     curses.noecho()
@@ -428,7 +429,7 @@ def SchiffePlatzieren(spieler):
     y = 1
     subwin.addstr(y, 1, 'Spieler: {}'.format(spieler.getName()))
 
-    # Schiffe und ihre Positionen zeigen
+    # nach Eingabe Schiffe und ihre Positionen anzeigen
     for schiff in spieler.getSchiffe().values():
         y += 1
         subwin.addstr(y, 1, 'Schiffsname: {}, Position: {}:{}'.format(
@@ -460,12 +461,12 @@ def SpielStarten(ListeVonSpielern):
         currentSpieler = ListeVonSpielern[currentSpielerIdx]
         nächsterSpieler = ListeVonSpielern[nächsterSpielerIdx]
 
-        # 'Der CurrentPlayer (Spieler der gerade spielt) schießt auf dem Feld vom nächsterSpieler (nächter Spieler)
+        # CurrentSpieler (Spieler der gerade spielt) schießt auf das Feld von nächsterSpieler (nächster Spieler)
 
-        # Das Spielfeld vom anderen Spieler wird gezeigt
+        # Spielfeld von nächsterSpieler wird angezeigt
         SpielerFeld = nächsterSpieler.getField()
 
-        # 'Feld im Zentrum des Fenster ausgeben, da Attribute 'alignment' von FeldZiehen
+        # Feld in der Mitte des Fensters anzeigen, weil Attribut 'alignment' von FeldZiehen()
         # nicht weitergegeben wurde
         window, subwin, grid = FeldZiehen(
             SpielerFeld, footer='Geben Sie die Schusskoordinaten an: ')
@@ -482,7 +483,7 @@ def SpielStarten(ListeVonSpielern):
         subwin.addstr(2, 2, SpielerLinks.getName())
         subwin.addstr(3, 2, 'Punktzahl: {}'.format(SpielerLinks.getPunktzahl()))
 
-        # alle Schiffe durchlaufen und ausgeben
+        # alle Schiffe durchlaufen und anzeigen
         for idx, (schiffId, schiff) in enumerate(SpielerLinks.getSchiffe().items()):
             subwin.addstr(
                 idx+4, 2, 'Schiffs Id {} - Treffer {}/{}'.format(schiffId, schiff.Treffer, schiff.Größe))
@@ -505,13 +506,12 @@ def SpielStarten(ListeVonSpielern):
 
         w_height, w_width = window.getmaxyx()
 
-        # prüfen ob ein Mensch oder Cpu dran ist
+        # Überprüfung, ob ein menschlicher Spieler oder der Computer dran ist
         if type(currentSpieler) == Spieler:
-            # Falls Mensch, dann wird auf Eingabe des Benutzers gewartet
+            # Wenn menschlicher Spieler dran ist, wird auf die Eingabe des Spielers gewartet
             goal = window.getstr(3).decode().strip().upper()
         else:
-            # Falls Cpu dran ist
-            # dann Schießziel wird zufällig ausgesucht
+            # Wenn Computer dran ist, wird Schießziel zufällig ausgewählt
             goal = currentSpieler.Schießen(
                 list(SpielerFeld.getPositions().keys()))
 
@@ -521,64 +521,64 @@ def SpielStarten(ListeVonSpielern):
         subwin.clear()
         grid.clear()
 
-        # wird dazu verwendet, um zu wissen, ob ein Schoß gültig war
+        # Abfrage ob Schuss gültig war
         Erfolg = False
 
-        # prüfen ob Ziel gültig ist
+        # Überprüfung der Gültigkeit des Zieles
         # 1. Bedingung:
-        #  Länge des Zeilpunktes ist min 2 und max 3 Buchstaben
+        #  Länge des Zielpunktes ist min 2 und max 3 Buchstaben lang
         if len(goal) in range(2, 4) and goal != curses.KEY_RESIZE:
             # 2. Bedingung:
-            # Punktreferenz kommt im Spielfeld vor
+            # Angabe des Punktes liegt im Spielfeld
             if goal in nächsterSpieler.getField().getPositions():
                 # 3. Bedungung
-                # Auf diesem Punkt wurde noch nie gespielt 
+                # besagter Punkt wurde noch nicht beschossen
                 if nächsterSpieler.getField().getValueByRef(goal) not in ['#', 'X']:
-                    # es wird davon ausgegangen, dass kein Schif getroffen wurde
+                    # Annahme, dass kein Schiff getroffen wurde getroffen
                     txt = 'VERFEHLT'
 
                     if nächsterSpieler.getField().getValueByRef(goal) == 'O':
-                        # falls echt kein Schiff getroffen wurde
-                        # dann Wert von diesem Punkt im Feld mit '#' ersetzen
+                        # wenn wirklich kein Schiff getroffen wurde
+                        # wird Wert von diesem Punkt im Spielfeld mit '#' besetzt
                         nächsterSpieler.getField().setValueByRef(goal, '#')
                     else:
-                        # falls ein Schif getroffen wurde
-                        # 'Anzahl von Schläge dieses Schiffes inkeremtieren
+                        # wenn ein Schiff getroffen wurde
+                        # Anzahl von Treffern auf dieses Schiffes erhöhen
                         nächsterSpieler.getField().getValueByRef(goal).gotdirektTreffer()
-                        # Wert von diesem Punkt im Feld mit 'X' ersetzen
+                        # wird Wert von diesem Punkt im Spielfeld mit 'X' besetzt
                         nächsterSpieler.getField().setValueByRef(goal, 'X')
-                        # Wert von txt mit 'HIT' ersetzen, weil ein Schif getroffen wurde
+                        # +Wert von txt mit 'HIT' besetzen, da ein Schiff getroffen wurde
                         txt = 'GETROFFEN'
-                        # Punktzahl des Spielers, wer dran ist und ein Schiff vom Gegner getroffen hat,
-                        # wird um 1 inkrementiert
+                        # Punktzahl des Spielers, welcher dran ist und ein Schiff des Gegner getroffen hat,
+                        # wird um 1 erhöht
                         currentSpieler.incrementPunktzahl()
 
-                        # falls Cpu der Spieler ist, der dran ist
+                        # wenn Computer an der Reihe ist
                         if type(currentSpieler) == Computer:
-                            # Computer wird darauf hingewiesen, dass er ein Treffer in diesem Punkt hatte
-                            # Sodass er beim nächsten Spiel in der Umgebung von diesem Platz spielt
+                            # Computer wird darauf hingewiesen, auf welcher Position ein Treffer war
+                            # Dadurch wird dieser beim nächsten Spielzug in diese Umgebung schießen
                             currentSpieler.Erfolg(goal)
 
-                    # Zeigen ob man ein Schiff getroffen hat oder nicht
+                    # Zeigen ob ein Schiff getroffen wurde oder nicht
                     window, subwin, grid = FeldZiehen(
                         nächsterSpieler.getField(), 'Drücken Sie eine Taste um fortzufahren')
 
                     h, w = subwin.getmaxyx()
                     subwin.addstr(h-2, 2, '{}'.format(txt))
 
-                    # Um Änderungen zu sehen
+                    # Änderungen sichtbar
                     window.refresh()
                     subwin.refresh()
                     grid.refresh()
 
-                    # pausieren bis Benutzen reagiert
+                    # pausieren bis User reagiert
                     window.getch()
 
-                    # 'Falls alle Bedingungen erfüllt wurden sind
-                    # hinweisen dass Erfolgreiche Versuche durchgeführt wurden sind
+                    # Wenn alle Bedingungen eingetroffen sind
+                    # darauf hinweisen, dass erfolgreicher Versuch durchgeführt wurde
                     Erfolg = True
 
-        # Falls eine Versuch erfolgreich war
+        # Wenn ein Versuch erfolgreich war
         if Erfolg == True:
             currentSpielerIdx = currentSpielerIdx + 1
             nächsterSpielerIdx += 1
@@ -600,15 +600,14 @@ def SpielStarten(ListeVonSpielern):
 
 
 def SpielVorbei(SpielerSchiffe):
-    # 'durchlauft alle Schiffe, die ein Spieler hat
-    # 'und prüft ob alle zerstört sind
+    # durchläuft alle Schiffe, die ein Spieler hat
+    # und prüft ob alle zerstört wurdens
     for schiff in SpielerSchiffe.values():
-        # falls nur ein Schiff noch nicht zerstört ist, dann Spiel soll weiter laufen
+        # wenn ein Schiff noch übrig ist, läuft Spiel weiter
         if schiff.getStatus() == True:
             return False
 
-    # Alle Schiffe vom Spieler sind zerstört
-    # Game is Over
+    # Ansonten, wenn alle Schiffe vom Spieler zerstört wurden, ist das Spiel vorbei
     return True
 
 
@@ -616,36 +615,43 @@ def SpielerVsSpieler():
 
     SpielerName = getSpielerName()
 
-    # Spieler Objekt wird erzeugt
+    # Spieler Objekt für Spieler1 wird generiert
     spieler1 = Spieler(SpielerName)
 
-    # Namen des 2. Spielers soll unterschiedlich von Namen des 1. Spielers sein
+    # Namen des 2. Spielers sollte nicht wie der Name des 1. Spielers sein
     while SpielerName == spieler1.getName():
         SpielerName = getSpielerName(2, 'Spieler 2 sollte anders heißen als Spieler 1. ')
 
-    # Spieler Objekt wird erzeugt
+    # Spieler Objekt für Spieler2 wird generiert
     spieler2 = Spieler(SpielerName)
 
-    # Spieler 1 soll seine Schiffe in seinem Field platzieren
+    # Spieler 1 wird gefragt, ob seine Schiffe in seinem Spielfeld automatisch oder manuell
+    # platziert werden sollen
     NachrichtZeigen('Spieler 1, wollen Sie Ihre Schiffe automatisch oder manuell platzieren?')
     choice = MenüAnzeigen(menu2)
+    # Schiffe werden automatisch platziert
     if choice == "automatisch":
         spieler1.SchiffePlatzierenAuto()
         NachrichtZeigen('Ihre Schiffe wurden platziert')
+    # Schiffe werden manuell vom Spieler platziert
     elif choice == "manuell":
         NachrichtZeigen('Spieler 2, bitte weggucken')
         SchiffePlatzieren(spieler1)
 
+    # Spieler 2 wird gefragt, ob seine Schiffe in seinem Spielfeld automatisch oder manuell
+    # platziert werden sollen
     NachrichtZeigen('Spieler 2, wollen Sie Ihre Schiffe automatisch oder manuell platzieren?')
     choice = MenüAnzeigen(menu2)
+    # Schiffe werden automatisch platziert
     if choice == "automatisch":
         spieler2.SchiffePlatzierenAuto()
         NachrichtZeigen('Ihre Schiffe wurden platziert')
+    # Schiffe werden manuell vom Spieler platziert
     elif choice == "manuell":
         NachrichtZeigen('Spieler 1, bitte weggucken')
         SchiffePlatzieren(spieler2)
 
-    # startet das Spiel zwischen zwei Spieler
+    #  das Spiel zwischen den zwei Spielern beginnt
     SpielStarten([spieler1, spieler2])
 
 
@@ -653,31 +659,32 @@ def SpielerVsCpu():
     NachrichtZeigen('Sie wollen gegen den CPU spielen')
     
     SpielerName = getSpielerName()
-    # einen Namen außer CPU und Computer aussuchen
+    
+    # Spieler Objekt wird erzeugt
+    spieler = Spieler(SpielerName)
+
+    # Name sollte nicht 'CPU' oder 'Computer' sein
     while SpielerName in ['CPU', 'COMPUTER']:
         SpielerName = getSpielerName(
-            2, 'Spieler NAME sollte anders sein als. {}'.format(SpielerName))
+            2, 'Spielername sollte nicht {} sein, da der Gegner so heißt. '.format(SpielerName))
     
+    # Spieler wird gefragt, ob seine Schiffe in seinem Spielfeld automatisch oder manuell
+    # platziert werden sollen
     NachrichtZeigen('Wollen Sie Ihre Schiffe automatisch oder manuell platzieren?')
-    spieler = Spieler(SpielerName)
     choice = MenüAnzeigen(menu2)
+    # Schiffe werden automatisch platziert
     if choice == "automatisch":
         spieler.SchiffePlatzierenAuto()
         NachrichtZeigen('Ihre Schiffe wurden platziert')
+    # Schiffe werden manuell vom Spieler platziert
     elif choice == "manuell":
         SchiffePlatzieren(spieler)
-    # Spieler Objekt erzeugen
+
     
-
-    # Anzahl der Schiffe ist auf 6 festgelegt
-    # Die Große des Feldes is automatisch 10x10
-
-    # Spieler anfordern, die Schiffe in seinem Feld zu platzieren
-
-    # Computer Object erzeugen
+    # Computer Objekt wird erzeugt
     cpu = Computer()
 
-    # CPU den Befehl geben, die Schiffe in seinem Feld zu platzieren
+    # CPU platziert automatisch Schiffe in seinem Spielfeld
     cpu.SchiffePlatzieren()
 
     window, subwin, grid = FeldZiehen(
@@ -687,14 +694,6 @@ def SpielerVsCpu():
     subwin.addstr(y, 1, 'Spieler: {} platziert seine Schiffe'.format(cpu.getName()))
     y+=1 
     subwin.addstr(y, 1, 'Drücken Sie eine Taste um fortzufahren')
-    # Die For-Schleife unten wurde während Debuging benutzt, um
-    # ' zu sehen, ob der CPU seine Schiffe korrekt im Feld positioniert hat
-    # Bitte 'uncomment' die Zeilen um zu sehen
-
-    # for schiff in cpu.getSchiffe().values():
-    #     y += 1
-    #     subwin.addstr(y, 1, 'Schiff name: {}, place: {}'.format(
-    #         schiff.getName(), schiff.getPosition()))
 
     window.refresh()
     subwin.refresh()
@@ -704,18 +703,19 @@ def SpielerVsCpu():
     subwin.clear()
     window.clear()
 
+    # Spiel zwischen Spieler und Computer wird gestartet
     SpielStarten([spieler, cpu])
 
 
 def SpielBeenden():
-    # Falls der Benutzer Exit aussucht, soll die untrige Nachricht angezeigt werden
+    # Wenn User Exit wählt, wir die untrige Abfrage angezeigt
     NachrichtZeigen('Sind Sie sicher, dass Sie das Spiel beenden wollen?')
     choice = MenüAnzeigen(menu3)
     if choice == "ja":
             # Spiel wird mit Exit Funktion beendet
         exit()
     elif choice == 'nein':
-            # Spieler kehrt zum Hauptmenü zurück
+            # User kehrt zum Hauptmenü zurück
         ()
 
 def MenüAnzeigen(menuvar):
@@ -724,48 +724,46 @@ def MenüAnzeigen(menuvar):
 
     while 1:
 
-        # Erstellung von Zwei Window Objekte
-        # Window hat Kopf- und Fußzeile
+        # Erstellung von Zwei Window Objekten
+        # Window hat eine Kopf- und Fußzeile
         window, subwin = DisplayErstellen()
 
-        # Schreiben der Menuelemente vertikal ab der Zeile 1 und Spalte 1,
-        # weil der Rand der Subwin die erste Zeile und Spalte besitzt
+        # Menü-Elemente werden vertikal ab der 1. Zeile und 1. Spalte geschrieben,
+        # da der Rand des Subwin die erste Zeile und Spalte einnimmt
 
         for index, element in enumerate(menuvar):
 
-            # 'das ausgewählte Element soll mit der Farbe (Schwarz auf Weiß) geschrieben werden
+            # ein ausgewähltes Menü-Element soll mit der Farbe Schwarz auf Weiß angezeigt werden
 
             if index == currentIndex:
-                # Farbe an
+                # Farbe wird eingeschaltet
                 subwin.attron(curses.color_pair(1))
-                # 'ausgewälte element mit farbe schreiben
+                # ausgewältes Element in besagter Farbe anzeigen
                 subwin.addstr(index + 1, 1, element)
-                # Farbe aus
+                # Farbe wird ausgschaltet
                 subwin.attroff(curses.color_pair(1))
             else:
-                # die nicht ausgewählte Menu-Elemente bekommen keine Farbe
+                # nicht ausgewählte Menü-Elemente werden nicht in Farbe angezeigt
                 subwin.addstr(index + 1, 1, element)
 
-        # Aktualisierung um die Änderungen zu sehen
+        # Aktualisierung um die Änderungen anzuzeigen
         window.refresh()
         subwin.refresh()
 
-        # Eingabe der Benutzer ablesen
+        # Eingabe des Users lesen
         key = window.getch()
 
         window.clear()
         subwin.clear()
 
         if key == curses.KEY_UP and currentIndex > 0:
-            # Falls der Benutzer 'Pfeil-nach-oben' Taste gedrückt hat
-            # Currentindex inkrementieren solange das erste Element nicht erreicht wurde
+            # Wenn der User eine der Pfeil-Tasten gedrückt hat
+            # currentIndex inkrementieren solange das erste oder letzte Menü-Element nicht erreicht wurde
             currentIndex = currentIndex - 1
         elif key == curses.KEY_DOWN and currentIndex < len(menuvar) - 1:
-            # Falls der Benutzer Pfeil-nach-unten Taste gedrückt hat
-            # Currentindex inkrementieren solange das letzte Element nicht erreicht wurde
             currentIndex = currentIndex + 1
         elif key == curses.KEY_ENTER or key in [10, 13]:
-            # Falls der Benutzer 'Eingabe-Taste' gedrückt hat
+            # Wemn der User die 'Enter-Taste' gedrückt hat
             window.clear()
             subwin.clear()
 
@@ -781,27 +779,27 @@ def MenüAnzeigen(menuvar):
 
 def main(stdscr):
 
-    #' blinkende Mousezeiger ausschalten
+    # Mauszeiger wird nicht angezeigt
     curses.curs_set(0)
 
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_GREEN)
 
     while 1:
-        # unendliche Schleife, weil das Programm nur dann aufhören soll, wenn der Benutzer "Exit" auswählt
+        # unendliche Schleife, da das Programm nur beendet werden soll, wenn der User "Exit" ausgewählt hat
 
-        # Diese Methode ermöglicht dem Benutzer einen Spielmodus auszuwählen
-        # Der Rückgabewert (String) wird klein geschrieben
+        # User kann Spielmodus auswählen
+        # Rückgabewert des Strings wird klein geschrieben
         choice = MenüAnzeigen(menu1)
 
         if choice == "spieler vs cpu":
-            # Abruf der Methode, die für den "Spieler vs Cpu"-Spielmodus zuständig ist
+            # Wenn "Spieler vs CPU"-Spielmodus ausgewählt wird Abruf von SpielerVsCpu()
             SpielerVsCpu()
         elif choice == 'spieler 1 vs spieler 2':
-            # Abruf der Methode, die für den "Player1 vs Player2"-Spielmodus zuständig ist
+            # Wenn "Spieler 1 vs Spieler 2"-Spielmodus ausgewählt wird Abruf von SpielerVsSpieler()
             SpielerVsSpieler()
         elif choice == 'schließe das spiel':
-            # Abruf der Methode, die für das Beenden des Spieles zuständig ist
+            # Wenn "Schließe das Spiel" ausgewählt wurde, Spiel beenden mit SpielBeenden()
             SpielBeenden()
 
         

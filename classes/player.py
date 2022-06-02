@@ -3,9 +3,9 @@ from classes.field import Field
 from classes.ship import Schiff
 import random
 
-# den Schiffe werden Namen (Values) "und IDen (Keys)" zugeördnet
-SCHIFFSNAMEN = {6: 'F221 Hessen', 5: 'F264 Ludwigshafen am Rhein', 4: 'P6126 S76 Frettchen',
-              3: 'M1098 Siegburg', 2: 'M1069 Homburg', 1: 'M1061 Rottweil'}
+# Schiffe werden Namen (Values) und dazugehörigen IDen (Keys) zugeordnet
+SCHIFFSNAMEN = {6: 'K-573 Новосибирска', 5: 'B-261 Новорусијска', 4: 'K-139 Београдска',
+              3: '610 Настојчивија', 2: 'K-154 Тигар', 1: 'K-461 Вук'}
 
 
 class Spieler:
@@ -16,8 +16,8 @@ class Spieler:
         self.schiffe = dict()
         self.field = Field()
         self.initSchiffe()
-
-    # Setters and getters
+    
+    # Erzeugung der Getter/ Setter Methoden
     def setName(self, name):
         self.name = name
 
@@ -42,112 +42,129 @@ class Spieler:
     def setSchiffe(self, schiffe):
         self.schiffe = schiffe
 
-    # diese Methode dient zur Initialierung von schiffe
+    # Methode dient zur Intitialisierung der Schiffe
     def initSchiffe(self):
 
-        # die Schleife fängt "an der Stelle" 0 an und geht die "number of schiffe" durch
+        # Schleife fängt bei 0 an und geht die numver von Schiffe durch
         for i in range(0, self.numSchiffe):
-            # zu jedem Schiff wird eine schiffId "zugeordnet"
+            # jedes Schiff bekommt eine SchiffId zugeteilt
             schiffId = len(SCHIFFSNAMEN) - i
-            # schiffName wird von dem dict "geholt" 
+            # SchiffName wird von dem dict geholt
             schiffName = SCHIFFSNAMEN[schiffId]
             # wird den Wert von "schiffId" zugeordnet
             Größe = schiffId
 
-            # falls die Größe kleiner als 1 oder 1 ist, dann wird sie automatisch
-            # die Größe 2 zugeordnet 
+            # sofern die Größe kleiner 1 ist, wird sie automatisch der Größe 2 zugeordnet
             if Größe <= 1:
                 Größe = 2
 
-            # schiffe ist dict
-            # Schlüssel ist der Id des Schiffes und Wert ist der Schiff-Objekt selbst
+            # dict ist Schiffe 
+            # Schlüssel ist die Id des Schiffes und Wert ist das Schiff-Objekt selbst
+            # Schiffe sind mit der Id eindeutig
             self.schiffe[schiffId] = Schiff(schiffId, schiffName, Größe)
 
-    # diese Methode dient zur Inkremtierung des Punktzahls
+    # Methode zur Implementierung der Punktzahl
     def incrementPunktzahl(self):
         self.setPunktzahl(self.getPunktzahl()+1)
     
     def UmgebungMarkieren(self, schiffPlatz):
-        # diese Methode markiert alle Plätze im Feld, 
-        # die ein Schiff umgeben als nicht verfügbar
-        # und gibt die zurück
+        # Methode markiert alle Plätze im Feld, die ein Schiff belegt als nicht verfügbar und gibt diese zurück
         
         plätze = set(schiffPlatz)
         field = set(self.getField().getPositions().keys())
         for platz in schiffPlatz:
             x, y = Field.decodePosition(platz)
-
-            # rechts von einem Platz
+            
+            # Links von einem Platz
+            if Field.encodePosition(x-1, y) in field:
+                plätze.add(Field.encodePosition(x-1, y))
+            
+            # Rechts 
             if Field.encodePosition(x+1, y) in field:
                 plätze.add(Field.encodePosition(x+1, y))
             
-            # Links
-            if Field.encodePosition(x-1, y) in field:
-                plätze.add(Field.encodePosition(x-1, y))
-
-            # unter
+            # Oben
+            if Field.encodePosition(x, y-1) in field:
+                plätze.add(Field.encodePosition(x, y-1))
+            # Unten
             if Field.encodePosition(x, y+1) in field:
                 plätze.add(Field.encodePosition(x, y+1))
 
-            # oben
-            if Field.encodePosition(x, y-1) in field:
-                plätze.add(Field.encodePosition(x, y-1))
+            
 
         return set(plätze)
 
     def SchiffePlatzierenAuto(self):
 
         # save the used positions in a set
+        # speichert die benutzten postioioneneen in einem set 
         used = set()
 
         # save the keys of the "getPositions dictionary" "getField dictionary" to the set 
+        #SIchert den Schlüssel von dem "getPositions dictionary" "getField dictionary" in dem set
         field = set(self.getField().getPositions().keys())
 
-        # die For-Schleife geht alle Schiffe (die 'values' in der dic) von CPU durch
+        # For-Schleife geht jeden Schiff durch (die 'values' in der dicn) von CPU  
         for schiff in self.schiffe.values():
 
-            # possible starting positions are added to a list
-            # starting position are all positions in a field without the used plätze
+            # mögliche starting postition wurden hinzugefügt zu der Liste
+            # die Start position sind alle Positionen in dem Feld ohne die benutzten Fäldern 
             options = list(field - used)
 
             # randomly pick a starting position from possible options
+            # zufällige start position von den gegebenen Optionen 
             pos = random.choice(options)
 
             # each schiff has a list of not possible starting plätze, (therefore)
+            # jeder Schiff hat eine Liste für nicht mögliche starting postitionen, ()
             # create a set that contains the list of impossible starting points
+            # erstellen eine set die beinhaltet eine Liste für alle mögliche starting positionen
             notPossible = set()
 
             # the initial status of each schiff is not platziert
+            # initial status für jedes Schiff das nicht plaziert ist 
             platziert = False
 
             # from a starting position it can go left ('l'), right ('r'), up ('u'), or down ('d')
+            # von der Startpostition kann es rechts ('r'), links ('l'), hoch ('u') oder runter ('d')
             directions = set(['l', 'r', 'u', 'd'])
 
             # (convert the postion from text to x and y coordinates)
+            # (converntiert die Posttion von einen text zu einem coordinate)
             # ! convert von Referenzen (bsp: A1) to X- und Y-Koordinate (bsp: 'A1' = (x=0, y=0))
+            # ! conventiert von Referenze (Beispiel: D1) zu X- und Y-Koordinate (Beispiel: 'D1' = (x=0; y=0))
             # (A1 => x=0, y=0)
+            # (D1 => x=0, y=0)
             x, y = Field.decodePosition(pos)
 
             # Solange ein Schiff keine Position hat, wird die While-Schleife durchgeführt
+            # Solange ein Schiff keine besitztende Postion hat, wird die While-Schleife ausgeführt
             while not platziert:
 
-                # adds possible plätze from starting point (if a schiff is not platziert 
+                # adds possible plätze from starting point (if a schiff is not platziert
                 # next to the staring point) and saves it to a list
+                # fügt mögliche plätze von Starting point hinzu (Wenn ein Schiff nicht plaziert konnte wurden geht es zu dem nächsten starting point)
+                # und sichert es in eine Liste 
                 möglichePlätze = list()
 
                 # randomly pick a direction and remove it from directions list
                 # a dirction will be randoml picked, because directions is a set() (set are not ordered)
+                # wählt zufällig eine Richtung aus und löscht die von der directions list
+                # a direction wird zufällig gewählt, weil die directions is a set() (set sind nicht geordnet) 
                 d = directions.pop()
 
                 # if the chosen direction is right
+                # wenn die ausgewählte direction rechts ist
                 if d == 'r':
                     start = pos
                     end = Field.encodePosition(x + schiff.Größe - 1, y)
                     # if the field end does fit in the grid
+                    # wenn das Feld ende nicht ein das Grid passt 
                     if end in field:
                         möglichePlätze = getVonBis(start, end)
 
                 # the same  logic for other directions
+                # gehe logik für die anderen richtungen 
                 elif d == 'l':
                     start = pos
                     end = Field.encodePosition(x - schiff.Größe + 1, y)
@@ -167,16 +184,22 @@ class Spieler:
                         möglichePlätze = getVonBis(start, end)
 
                 # if the algorithm found a possible platz for the schiff
+                # wenn der algroith ein geeigneten Platz finden für das Schiff wird das ausgeführt 
                 if len(möglichePlätze) > 0:
                     # if the platz contains a used position, ignore this "platz" and
                     # start over in other direction
+                    # wenn des Platz eine benutzets ist, wird dies ignoriert als "platz" und dann startet es in eine ander richtung
                     if len(set(möglichePlätze) & used) > 0:
                         möglichePlätze.clear()
                     # if the possible plätze don't include used plätze
                     # then platz this schiff here
                     # and mark this platz and plätze around it as used too
+                    # wenn die ausgewählte Position nicht benutzt ist
+                    # wird das Schiff das Plaziert
+                    # und die postition wird als und die positionen darum (beniutzten postitionenen) werden las vergeben markiert
                     else:
                         # platz the schiff here
+                        # schiff wird auf der position plaziert 
                         for p in möglichePlätze:
                             #
                             self.getField().setValueByRef(p, schiff)
@@ -184,27 +207,39 @@ class Spieler:
                         self.schiffe[schiff.id].setPosition(möglichePlätze)
                         # show me the result
                         # print('{} in {}'.format(schiff.id, möglichePlätze))
+                        # resultat wird präsenteirt
+                        # print('{} in {}'.format(schiff.id, möglichePlätze))
 
                         used = used.union(
                             self.UmgebungMarkieren(möglichePlätze))
                         # mark the schiff as platziert
+                        # markieren die schiffe als plaziert 
                         platziert = True
                 # if the algorithm didn't find any platz for the schiff
+                # wemm das algroithm kein platz findet für das Schiff 
 
                 # if all direction are tried
                 # add this starting position
                 # then pick another random position
+                # wenn alle directionenen versucht wurden sind 
+                # wird die startpostion hinzugefügt
+                # dann wird eine neue Sartpostion ausgewählt 
                 if len(directions) == 0 and not platziert:
                     # it is impossible to platz this schiff in the
                     # field starting from this pos
                     # so add pos to (the set of) not possible starting points
+                    # wenn es unmöglich ist ein platz für ein Shciff zu finden
+                    #startet das feld von der Position
+                    # und fügt pos zu (set of) nicht startbate positionen 
                     notPossible.add(pos)
 
                     # pick a new starting point
+                    # wählt eine neue start position uas 
                     options = list(set(options) - notPossible)
                     pos = random.choice(options)
 
                     # re-assign directions for the new starting point
+                    # neu zugewisene richtung von der neuen start position 
                     directions = set(['l', 'r', 'u', 'd'])
                     x, y = Field.decodePosition(pos)
 
