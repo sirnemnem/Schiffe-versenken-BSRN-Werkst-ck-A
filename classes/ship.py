@@ -4,13 +4,13 @@ class Schiff:
         self.id = id
         self.name = name
         self.Größe = Größe
-        # the automatic "Status of Schiff" is not hit (True)
+        # Default "Status des Schiffes" ist nicht getroffen (true)
         self.Status = True
         self.Treffer = 0
-        # save positions to list
+        # Positionen speichern in list()
         self.position = list()
 
-# make getter and setter methods (Zeile 14 - Zeile 48) um Zugriff in anderen Klassen zu haben
+# getter and setter Methoden erstellen (Zeile 14 - Zeile 48) um Zugriff in anderen Klassen zu haben
     def getId(self):
         return self.id
 
@@ -49,11 +49,11 @@ class Schiff:
 
     def gotdirektTreffer(self):
         self.Treffer += 1
-        # prüfen, ob die Anzahl der Schläge die Größe des Schiffes "beinhalten"
+        # überprüfen, ob die Anzahl der Treffer mehr als die Größe des Schiffes sind
         if self.getTreffer() >= self.getGröße():
-            # falls ja, dazu hinweisen, dass ein Schiff zerstört wurde
+            # Wenn dies zutrifft User darauf hinweisen, dass ein Schiff zerstört wurde
             self.Status = False
 
     def SchiffPlatzieren(self, platz):
-        # Add platz to the end of the list
+        # Platz zum Ende der Liste hinzufügen
         self.position.append(platz)
