@@ -1,5 +1,4 @@
-COLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-        'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+COLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
 
 class Position:
@@ -9,6 +8,7 @@ class Position:
         self.value = 'O'
         self.ref = '{}{}'.format(COLS[self.x_cor], self.y_cor+1)
 
+    #Erstellung der getter und setter Methoden
     def getX_cor(self):
         return self.x_cor
 

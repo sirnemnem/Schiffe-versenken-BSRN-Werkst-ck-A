@@ -9,6 +9,7 @@ class Field:
         self.positions = dict()
         self.initField()
 
+    #Erstellung der getter und setter Methoden
     def getHeight(self):
         return self.height
 
@@ -28,7 +29,7 @@ class Field:
         self.positions = positions
 
     def initField(self):
-        # initialisierung des Feldes
+        # Initialisierung des Feldes
         for x in range(self.width):
             for y in range(self.height):
                 pos = Position(x, y)
@@ -51,6 +52,7 @@ class Field:
 
     @staticmethod
     def encodePosition(xCor, yCor):
+        # Zuweisung der Spielfeldkoordinaten
         # encodePosition(0,0) ==> 'A1'
         # encodePosition(0,1) ==> 'A2'
         return Position(xCor, yCor).getRef()
