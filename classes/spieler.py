@@ -1,6 +1,6 @@
 from typing import Set
-from classes.field import Field
-from classes.ship import Schiff
+from classes.feld import Field
+from classes.schiff import Schiff
 import random
 
 # Schiffe werden Namen (Values) und dazugehörigen IDen (Keys) zugeordnet

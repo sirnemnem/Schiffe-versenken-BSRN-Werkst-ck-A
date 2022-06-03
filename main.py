@@ -1,5 +1,5 @@
-from classes.player import Spieler
-from classes.player import Computer
+from classes.spieler import Spieler
+from classes.spieler import Computer
 import curses
 
 
