@@ -62,10 +62,10 @@ def DisplayErstellen(header=WILKOMMENS_HEADER, footer=WILKOMMENS_FOOTER):
     # sicherstellen, dass Mindestgröße für Terminal erfüllt ist
     MinFensterGröße()
 
-    # *** erstellt ein Window-Objekt, welches der ganzen Kommandozeile repräsentiert
+    # erstellt ein Window-Objekt, welches der ganzen Kommandozeile repräsentiert
     window = curses.initscr()
 
-    #  Ablesen der Höhe und Breite der Kommandozeile
+    # Ablesen der Höhe und Breite der Kommandozeile
     height, width = window.getmaxyx()
 
     # Kopfzeile steht ganz oben
@@ -92,7 +92,7 @@ def DisplayErstellen(header=WILKOMMENS_HEADER, footer=WILKOMMENS_FOOTER):
     return (window, subwin)
 
 
-# '' diese Methode sorgt dafür, dass der vorher angegebene Text in der Mitte des Fenster ausgegeben wird
+# diese Methode sorgt dafür, dass der vorher angegebene Text in der Mitte des Fenster ausgegeben wird
 def NachrichtZeigen(msg=''):
 
     window, subwin = DisplayErstellen()
@@ -134,7 +134,7 @@ def getSpielerName(spieler=1, msg=''):
         subwin.addstr(
             1, 1, '{}Geben Sie einen Namen für Spieler {} an'.format(msg, spieler))
 
-        # Akktualisierung des Fensters um Änderungen sehen zu können
+        # Aktualisierung des Fensters um Änderungen sehen zu können
         window.refresh()
         subwin.refresh()
 
@@ -337,7 +337,7 @@ def SchiffePlatzieren(spieler):
     # Mauszeiger wird eingeschaltet, sodass User sehen kann, wo eingetippt wird
     curses.curs_set(1)
 
-    # Schiffe vom Spieler in playerSchiffe speichern
+    # Schiffe vom Spieler in SpielerSchiffe speichern
     # Id des Schiffes und der Wert des Schiffes selbst werden in einem Python dict gespeichert
 
     SpielerSchiffe = spieler.getSchiffe().values()
@@ -346,7 +346,7 @@ def SchiffePlatzieren(spieler):
         footer = 'Geben Sie die Position für das Schiff ein (bsp.: A1:A4 = von A1 bis A4): '
 
         while 1:
-            # das aktualisierte Feld des Spielers abrufen und in playerFeld anzeigen
+            # das aktualisierte Feld des Spielers abrufen und in SpielerFeld anzeigen
             SpielerFeld = spieler.getField()
 
             # das Spielfield, wo der Spieler seine Schiffe plazieren kann, auf dem Bildschirm ausgeben
