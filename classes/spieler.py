@@ -5,7 +5,7 @@ import random
 
 # Schiffe werden Namen (Values) und dazugehörigen IDen (Keys) zugeordnet
 SCHIFFSNAMEN = {6: 'K-573 Новосибирска', 5: 'B-261 Новорусијска', 4: 'K-139 Београдска',
-              3: '610 Настојчивија', 2: 'K-154 Тигар', 1: 'K-461 Вук'}
+              3: 'DD-610 Настојчивија', 2: 'K-154 Тигар', 1: 'K-461 Вук'}
 
 
 class Spieler:
@@ -246,8 +246,7 @@ class Computer(Spieler):
             # falls dies der Fall ist, dann wir die Auswahl ersetzt
             key = random.choice(list(self.memory.keys()))
             
-            if self.memory.keys:
-                choice = self.memory[key].pop()
+            choice = self.memory[key].pop()
 
 
             if len(self.memory[key]) == 0:

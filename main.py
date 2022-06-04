@@ -140,14 +140,14 @@ def getSpielerName(spieler=1, msg=''):
 
         # Die Eingabe steht in der Fußzeile
         y = height-1
-        # '' Da die Fußzeile schon beschriftet wurde, soll das Program
+        # Da die Fußzeile schon beschriftet wurde, soll das Program
         # die Beschriftung ausweichen
         x = len(footer)
 
         # Alle Buchstaben (Zeichenkette) vor der Eingabe der Enter-Taste lesen
         name = window.getstr(y, x).decode().strip().upper()
 
-        # Fenster-Obkjekte leer machen
+        # Fenster-Objekte leer machen
         window.clear()
         subwin.clear()
 
@@ -180,26 +180,26 @@ def FeldZiehen(SpielerFeld, footer, hideSchiffe=True, alignment='center'):
     gridHeight = SpielerFeld.getHeight() * 2
     gridWidth = SpielerFeld.getWidth() * 4
 
-    # '' wo das Feld im subwin platziert wird
+    # wo das Feld im subwin platziert wird
     grid_begin_y = h//2 - gridHeight//2
     grid_begin_x = w//2 - gridWidth//2
 
-    # ''* wo das Feld im subwin platziert wird nach Abfrage links oder rechts
+    # wo das Feld im subwin platziert wird nach Abfrage links oder rechts
     if alignment.lower() == 'rechts':
         grid_begin_x = w - gridWidth - 2
     elif alignment.lower() == 'links':
         grid_begin_x = 2
 
-    #'  Erstellung eines Feldes im sder
+    # Erstellung eines Feldes im sder
     grid = subwin.derwin(gridHeight, gridWidth, grid_begin_y, grid_begin_x)
 
     gridHeight, gridWidth = grid.getmaxyx()
 
-    #' Alle 4 Spalten beginnt von der 3. Spalte ein '|'
+    # Alle 4 Spalten beginnt von der 3. Spalte ein '|'
     for x in range(3, gridWidth - 1, 4):
         grid.vline(0, x, '|', gridHeight - 1)
 
-    # 'Alle 2 Zeilen beginnt von der 1. Zeile ein '-'
+    # Alle 2 Zeilen beginnt von der 1. Zeile ein '-'
     for y in range(1, gridHeight - 1, 2):
         grid.hline(y, 0, '-', gridWidth)
 
@@ -212,7 +212,7 @@ def FeldZiehen(SpielerFeld, footer, hideSchiffe=True, alignment='center'):
             value = SpielerFeld.getValueByRef(posRef)
 
             # hideSchiffe == True
-            # ' falls die Schiffe nicht im Feld angezeigt werden sollen
+            # falls die Schiffe nicht im Feld angezeigt werden sollen
             if hideSchiffe:
                 # ' während des Spiels werden die Positionen von den Schiffen nicht gezeigt
                 # Referenz (zB: 'A10'), 'X' oder '#' wird ausgegeben, falls Treffer oder nicht
@@ -220,14 +220,14 @@ def FeldZiehen(SpielerFeld, footer, hideSchiffe=True, alignment='center'):
                 if value in ['X', '#']:
                     txt = value
 
-            # ' falls die Schiffe im Feld angezeigt werden sollen
+            # falls die Schiffe im Feld angezeigt werden sollen
             else:
                 # falls kein Schiff vorliegt
                 if value in ['O', 'X', '#']:
                     # Referenz ausgeben
                     txt = posRef
 
-                #falls ein Schiff vorliegt
+                # falls ein Schiff vorliegt
                 else:
                     # Id zeigen
                     txt = value.getId()
@@ -284,7 +284,7 @@ def checkSchiffsPlatz(SpielerFeld, start, end, Größe):
     if len(start) not in range(2, 4) or len(end) not in range(2, 4):
         return False
 
-    # prüfen ob ein Platz-Referenz vorkommt, zB: A1 in ['A1','A3','C4']
+    # prüfen ob eine Platz-Referenz vorkommt, zB: A1 in ['A1','A3','C4']
     if start in SpielerFeld.getPositions() and end in SpielerFeld.getPositions():
 
         # Platzreferenz auf X- und Y-Koordinaten abbilden auf dem Feld
@@ -486,9 +486,9 @@ def SpielStarten(ListeVonSpielern):
         # alle Schiffe durchlaufen und anzeigen
         for idx, (schiffId, schiff) in enumerate(SpielerLinks.getSchiffe().items()):
             subwin.addstr(
-                idx+4, 2, 'Schiffs Id {} - Treffer {}/{}'.format(schiffId, schiff.Treffer, schiff.Größe))
+                idx+4, 2, 'Treffer {}/{} - {}'.format(schiff.Treffer, schiff.Größe, schiff.getName()))
 
-        x = w - max(len(SpielerRechts.getName()), len('Schiffs Id 1 - Treffer 6/6'))
+        x = w - max(len(SpielerRechts.getName()), len('Treffer 6/6 - Schiffsname K-573 Нов'))
 
         subwin.addstr(1, x-2, 'Spieler 2:')
         subwin.addstr(2, x-2, SpielerRechts.getName())
@@ -496,7 +496,7 @@ def SpielStarten(ListeVonSpielern):
 
         for idx, (schiffId, schiff) in enumerate(SpielerRechts.getSchiffe().items()):
             subwin.addstr(
-                idx+4, x-2, 'Schiffs Id {} - Treffer {}/{}'.format(schiffId, schiff.Treffer, schiff.Größe))
+                idx+4, x-2, 'Treffer {}/{} - {}'.format(schiff.Treffer, schiff.Größe, schiff.getName()))
 
         subwin.addstr(h-2, 2, '{} spielt gerade.'.format(currentSpieler.getName()))
 
@@ -526,7 +526,7 @@ def SpielStarten(ListeVonSpielern):
 
         # Überprüfung der Gültigkeit des Zieles
         # 1. Bedingung:
-        #  Länge des Zielpunktes ist min 2 und max 3 Buchstaben lang
+        # Länge des Zielpunktes ist min 2 und max 3 Buchstaben lang
         if len(goal) in range(2, 4) and goal != curses.KEY_RESIZE:
             # 2. Bedingung:
             # Angabe des Punktes liegt im Spielfeld
@@ -595,7 +595,7 @@ def SpielStarten(ListeVonSpielern):
         del grid
 
         if SpielVorbei(nächsterSpieler.getSchiffe()):
-            NachrichtZeigen('{} hat gewonnen !!'.format(currentSpieler.getName()))
+            NachrichtZeigen('{} hat gewonnen !!!'.format(currentSpieler.getName()))
             break
 
 
@@ -651,7 +651,7 @@ def SpielerVsSpieler():
         NachrichtZeigen('Spieler 1, bitte weggucken')
         SchiffePlatzieren(spieler2)
 
-    #  das Spiel zwischen den zwei Spielern beginnt
+    # das Spiel zwischen den zwei Spielern beginnt
     SpielStarten([spieler1, spieler2])
 
 
@@ -806,7 +806,7 @@ def main(stdscr):
 
 
 if __name__ == "__main__":
-    # 'the wrapper() function takes a callable object and 
+    # the wrapper() function takes a callable object and 
     # does the initializations described above, also initializing colors if 
     # color support is present. wrapper() then runs your provided callable. 
     # Once the callable returns, wrapper() will restore the original state of the terminal.
