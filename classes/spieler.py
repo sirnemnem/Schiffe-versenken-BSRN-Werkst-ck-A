@@ -1,5 +1,5 @@
 from typing import Set
-from classes.feld import Field
+from classes.feld import Feld
 from classes.schiff import Schiff
 import random
 
@@ -14,7 +14,7 @@ class Spieler:
         self.Punktzahl = 0
         self.numSchiffe = numSchiffe
         self.schiffe = dict()
-        self.field = Field()
+        self.feld = Feld()
         self.initSchiffe()
     
     # Erzeugung der Getter/ Setter Methoden
@@ -30,11 +30,11 @@ class Spieler:
     def getPunktzahl(self):
         return self.Punktzahl
 
-    def getField(self):
-        return self.field
+    def getFeld(self):
+        return self.feld
 
-    def setField(self, field):
-        self.field = field
+    def setFeld(self, feld):
+        self.feld = feld
 
     def getSchiffe(self):
         return self.schiffe
@@ -71,24 +71,24 @@ class Spieler:
         # Methode markiert alle Plätze im Feld, die ein Schiff belegt als nicht verfügbar und gibt diese zurück
         
         plätze = set(schiffPlatz)
-        field = set(self.getField().getPositions().keys())
+        feld = set(self.getFeld().getPositions().keys())
         for platz in schiffPlatz:
-            x, y = Field.decodePosition(platz)
+            x, y = Feld.decodePosition(platz)
             
             # Links von einer Position
-            if Field.encodePosition(x-1, y) in field:
-                plätze.add(Field.encodePosition(x-1, y))
+            if Feld.encodePosition(x-1, y) in feld:
+                plätze.add(Feld.encodePosition(x-1, y))
             
             # Rechts 
-            if Field.encodePosition(x+1, y) in field:
-                plätze.add(Field.encodePosition(x+1, y))
+            if Feld.encodePosition(x+1, y) in feld:
+                plätze.add(Feld.encodePosition(x+1, y))
             
             # Drüber
-            if Field.encodePosition(x, y-1) in field:
-                plätze.add(Field.encodePosition(x, y-1))
+            if Feld.encodePosition(x, y-1) in feld:
+                plätze.add(Feld.encodePosition(x, y-1))
             # Drunter
-            if Field.encodePosition(x, y+1) in field:
-                plätze.add(Field.encodePosition(x, y+1))
+            if Feld.encodePosition(x, y+1) in feld:
+                plätze.add(Feld.encodePosition(x, y+1))
 
             
 
@@ -99,15 +99,15 @@ class Spieler:
         # speichert die benutzten Positionen in einem set 
         used = set()
 
-        # sichert den Schlüssel von dem "getPositions dictionary" "getField dictionary" in dem set
-        field = set(self.getField().getPositions().keys())
+        # sichert den Schlüssel von dem "getPositions dictionary" "getFeld dictionary" in dem set
+        feld = set(self.getFeld().getPositions().keys())
 
         # For-Schleife geht jedes Schiff durch (die 'values' in der dicn) von CPU  
         for schiff in self.schiffe.values():
 
             # mögliche Start-Position wurde hinzugefügt zu der Liste
             # die Start-Position sind alle Positionen in dem Feld ohne die benutzten Felder
-            options = list(field - used)
+            options = list(feld - used)
 
             # zufällige Start-Position von den gegebenen Optionen 
             pos = random.choice(options)
@@ -126,7 +126,7 @@ class Spieler:
             # ! konvertiert vom String (Beispiel: D1) zu X- und Y-Koordinate (bsp.: 'D1' = (x=0; y=0))
             # (A1 => x=0, y=0)
             # (D1 => x=0, y=0)
-            x, y = Field.decodePosition(pos)
+            x, y = Feld.decodePosition(pos)
 
             # Solange ein Schiff keine besetzte Postion hat, wird die While-Schleife ausgeführt
             while not platziert:
@@ -143,29 +143,29 @@ class Spieler:
                 # wenn die ausgewählte Richtung rechts ist
                 if d == 'r':
                     start = pos
-                    end = Field.encodePosition(x + schiff.Größe - 1, y)
+                    end = Feld.encodePosition(x + schiff.Größe - 1, y)
 
                     # wenn das Feld Ende nicht in das Feld passt 
-                    if end in field:
+                    if end in feld:
                         möglichePlätze = getVonBis(start, end)
 
                 # die selbe Logik für die anderen Richtungen 
                 elif d == 'l':
                     start = pos
-                    end = Field.encodePosition(x - schiff.Größe + 1, y)
-                    if end in field:
+                    end = Feld.encodePosition(x - schiff.Größe + 1, y)
+                    if end in feld:
                         möglichePlätze = getVonBis(start, end)
 
                 elif d == 'u':
                     start = pos
-                    end = Field.encodePosition(x, y - schiff.Größe + 1)
-                    if end in field:
+                    end = Feld.encodePosition(x, y - schiff.Größe + 1)
+                    if end in feld:
                         möglichePlätze = getVonBis(start, end)
 
                 elif d == 'd':
                     start = pos
-                    end = Field.encodePosition(x, y + schiff.Größe - 1)
-                    if end in field:
+                    end = Feld.encodePosition(x, y + schiff.Größe - 1)
+                    if end in feld:
                         möglichePlätze = getVonBis(start, end)
 
 
@@ -184,7 +184,7 @@ class Spieler:
                         # Schiff wird auf der Position plaziert 
                         for p in möglichePlätze:
                             #
-                            self.getField().setValueByRef(p, schiff)
+                            self.getFeld().setValueByRef(p, schiff)
 
                         self.schiffe[schiff.id].setPosition(möglichePlätze)
                         # Resultat wird präsenteirt
@@ -212,7 +212,7 @@ class Spieler:
 
                     # neu zugewiesene Richtung von der neuen Start-Position 
                     directions = set(['l', 'r', 'u', 'd'])
-                    x, y = Field.decodePosition(pos)
+                    x, y = Feld.decodePosition(pos)
 
                 if platziert:
                     break
@@ -270,25 +270,25 @@ class Computer(Spieler):
         # die Methode dient zur Markierung alle Felder die von einem Schiff besetzt sind und gibt diese zurück
         
         plätze = set(schiffPlatz)
-        field = set(self.getField().getPositions().keys())
+        feld = set(self.getFeld().getPositions().keys())
         for platz in schiffPlatz:
-            x, y = Field.decodePosition(platz)
+            x, y = Feld.decodePosition(platz)
 
             # Rechts von einer Position
-            if Field.encodePosition(x+1, y) in field:
-                plätze.add(Field.encodePosition(x+1, y))
+            if Feld.encodePosition(x+1, y) in feld:
+                plätze.add(Feld.encodePosition(x+1, y))
             
             # Links
-            if Field.encodePosition(x-1, y) in field:
-                plätze.add(Field.encodePosition(x-1, y))
+            if Feld.encodePosition(x-1, y) in feld:
+                plätze.add(Feld.encodePosition(x-1, y))
 
             # Drunter
-            if Field.encodePosition(x, y+1) in field:
-                plätze.add(Field.encodePosition(x, y+1))
+            if Feld.encodePosition(x, y+1) in feld:
+                plätze.add(Feld.encodePosition(x, y+1))
 
             # Drüber
-            if Field.encodePosition(x, y-1) in field:
-                plätze.add(Field.encodePosition(x, y-1))
+            if Feld.encodePosition(x, y-1) in feld:
+                plätze.add(Feld.encodePosition(x, y-1))
 
         return set(plätze)
 
@@ -297,15 +297,15 @@ class Computer(Spieler):
         # speichert die benutzten Positionen in einem set 
         used = set()
 
-        # sichert den Schlüssel von dem "getPositions dictionary" "getField dictionary" in dem set
-        field = set(self.getField().getPositions().keys())
+        # sichert den Schlüssel von dem "getPositions dictionary" "getFeld dictionary" in dem set
+        feld = set(self.getFeld().getPositions().keys())
 
         # For-Schleife geht jedes Schiff durch (die 'values' in der dict) von CPU 
         for schiff in self.schiffe.values():
 
             # mögliche Start-Position wurde hinzugefügt zu der Liste
             # die Start-Position sind alle Positionen in dem Feld ohne die benutzten Felder 
-            options = list(field - used)
+            options = list(feld - used)
 
             # zufällige Start-Position von den gegebenen Optionen 
             pos = random.choice(options)
@@ -324,7 +324,7 @@ class Computer(Spieler):
             # ! konvertiert vom String (Beispiel: D1) zu X- und Y-Koordinate (bsp.: 'D1' = (x=0; y=0))
             # (A1 => x=0, y=0)
             # (D1 => x=0, y=0)
-            x, y = Field.decodePosition(pos)
+            x, y = Feld.decodePosition(pos)
 
             # Solange ein Schiff keine besetzte Postion hat, wird die While-Schleife ausgeführt
             while not platziert:
@@ -341,29 +341,29 @@ class Computer(Spieler):
                 # wenn die ausgewählte Richtung rechts ist
                 if d == 'r':
                     start = pos
-                    end = Field.encodePosition(x + schiff.Größe - 1, y)
+                    end = Feld.encodePosition(x + schiff.Größe - 1, y)
                     
                     # wenn das Feld Ende nicht in das Feld passt
-                    if end in field:
+                    if end in feld:
                         möglichePlätze = getVonBis(start, end)
 
                 # die selbe Logik für die anderen Richtungen  
                 elif d == 'l':
                     start = pos
-                    end = Field.encodePosition(x - schiff.Größe + 1, y)
-                    if end in field:
+                    end = Feld.encodePosition(x - schiff.Größe + 1, y)
+                    if end in feld:
                         möglichePlätze = getVonBis(start, end)
 
                 elif d == 'u':
                     start = pos
-                    end = Field.encodePosition(x, y - schiff.Größe + 1)
-                    if end in field:
+                    end = Feld.encodePosition(x, y - schiff.Größe + 1)
+                    if end in feld:
                         möglichePlätze = getVonBis(start, end)
 
                 elif d == 'd':
                     start = pos
-                    end = Field.encodePosition(x, y + schiff.Größe - 1)
-                    if end in field:
+                    end = Feld.encodePosition(x, y + schiff.Größe - 1)
+                    if end in feld:
                         möglichePlätze = getVonBis(start, end)
 
                 # wenn der Algorithmus einen geeigneten Platz findet für das Schiff
@@ -381,7 +381,7 @@ class Computer(Spieler):
                         # Schiff wird auf der Position plaziert 
                         for p in möglichePlätze:
                             #
-                            self.getField().setValueByRef(p, schiff)
+                            self.getFeld().setValueByRef(p, schiff)
 
                         self.schiffe[schiff.id].setPosition(möglichePlätze)
                         # Resultat wird präsenteirt
@@ -409,7 +409,7 @@ class Computer(Spieler):
 
                     # neu zugewiesene Richtung von der neuen Start-Position
                     directions = set(['l', 'r', 'u', 'd'])
-                    x, y = Field.decodePosition(pos)
+                    x, y = Feld.decodePosition(pos)
 
                 if platziert:
                     break
@@ -418,8 +418,8 @@ class Computer(Spieler):
 # Beispiel getVonBis('D1', 'D6') ==> ['D1','D2','D3','D4','D5','D6']
 def getVonBis(start, end):
 
-    start_x, start_y = Field.decodePosition(start)
-    end_x, end_y = Field.decodePosition(end)
+    start_x, start_y = Feld.decodePosition(start)
+    end_x, end_y = Feld.decodePosition(end)
 
     # Resultate werden in einer Liste gespeichert
     result = list()
@@ -437,7 +437,7 @@ def getVonBis(start, end):
         # Start bis Ende durchlaufen
         # Alle Punkte (x,y) in Referenz abbilden: (0,0)='A1'
         for y in range(start_y, end_y + 1):
-            ref = Field.encodePosition(x, y)
+            ref = Feld.encodePosition(x, y)
             result.append(ref)
 
     # Wenn der fall eintritt, dass Start und Ende in derselben Zeile liegen 
@@ -448,7 +448,7 @@ def getVonBis(start, end):
             start_x = end_x
             end_x = tmp
         for x in range(start_x, end_x + 1):
-            ref = Field.encodePosition(x, y)
+            ref = Feld.encodePosition(x, y)
             result.append(ref)
 
     return result

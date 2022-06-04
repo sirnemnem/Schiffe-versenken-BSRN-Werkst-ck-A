@@ -347,9 +347,9 @@ def SchiffePlatzieren(spieler):
 
         while 1:
             # das aktualisierte Feld des Spielers abrufen und in SpielerFeld anzeigen
-            SpielerFeld = spieler.getField()
+            SpielerFeld = spieler.getFeld()
 
-            # das Spielfield, wo der Spieler seine Schiffe plazieren kann, auf dem Bildschirm ausgeben
+            # das Spielfeld, wo der Spieler seine Schiffe plazieren kann, auf dem Bildschirm ausgeben
             window, subwin, grid = FeldZiehen(
                 SpielerFeld, footer, False, 'rechts')
 
@@ -410,7 +410,7 @@ def SchiffePlatzieren(spieler):
                     for x in range(start_x, end_x + 1):
                         for y in range(start_y, end_y + 1):
                             # Wert des Platzes mit Schiff-Objekt ersetzen
-                            spieler.getField().setValueByCor(x, y, schiff)
+                            spieler.getFeld().setValueByCor(x, y, schiff)
                             # Schiff mit besagter Id auf diesen Platz setzen
                             spieler.getSchiffe()[schiff.getId()].SchiffPlatzieren(
                                 SpielerFeld.encodePosition(x, y))
@@ -424,7 +424,7 @@ def SchiffePlatzieren(spieler):
     curses.curs_set(0)
 
     window, subwin, grid = FeldZiehen(
-        spieler.getField(), "Drücken Sie eine Taste um fortzufahren.", True, 'rechts')
+        spieler.getFeld(), "Drücken Sie eine Taste um fortzufahren.", True, 'rechts')
 
     y = 1
     subwin.addstr(y, 1, 'Spieler: {}'.format(spieler.getName()))
@@ -464,7 +464,7 @@ def SpielStarten(ListeVonSpielern):
         # CurrentSpieler (Spieler der gerade spielt) schießt auf das Feld von nächsterSpieler (nächster Spieler)
 
         # Spielfeld von nächsterSpieler wird angezeigt
-        SpielerFeld = nächsterSpieler.getField()
+        SpielerFeld = nächsterSpieler.getFeld()
 
         # Feld in der Mitte des Fensters anzeigen, weil Attribut 'alignment' von FeldZiehen()
         # nicht weitergegeben wurde
@@ -530,23 +530,23 @@ def SpielStarten(ListeVonSpielern):
         if len(goal) in range(2, 4) and goal != curses.KEY_RESIZE:
             # 2. Bedingung:
             # Angabe des Punktes liegt im Spielfeld
-            if goal in nächsterSpieler.getField().getPositions():
+            if goal in nächsterSpieler.getFeld().getPositions():
                 # 3. Bedungung
                 # besagter Punkt wurde noch nicht beschossen
-                if nächsterSpieler.getField().getValueByRef(goal) not in ['#', 'X']:
+                if nächsterSpieler.getFeld().getValueByRef(goal) not in ['#', 'X']:
                     # Annahme, dass kein Schiff getroffen wurde getroffen
                     txt = 'VERFEHLT'
 
-                    if nächsterSpieler.getField().getValueByRef(goal) == 'O':
+                    if nächsterSpieler.getFeld().getValueByRef(goal) == 'O':
                         # wenn wirklich kein Schiff getroffen wurde
                         # wird Wert von diesem Punkt im Spielfeld mit '#' besetzt
-                        nächsterSpieler.getField().setValueByRef(goal, '#')
+                        nächsterSpieler.getFeld().setValueByRef(goal, '#')
                     else:
                         # wenn ein Schiff getroffen wurde
                         # Anzahl von Treffern auf dieses Schiffes erhöhen
-                        nächsterSpieler.getField().getValueByRef(goal).gotdirektTreffer()
+                        nächsterSpieler.getFeld().getValueByRef(goal).gotdirektTreffer()
                         # wird Wert von diesem Punkt im Spielfeld mit 'X' besetzt
-                        nächsterSpieler.getField().setValueByRef(goal, 'X')
+                        nächsterSpieler.getFeld().setValueByRef(goal, 'X')
                         # +Wert von txt mit 'HIT' besetzen, da ein Schiff getroffen wurde
                         txt = 'GETROFFEN'
                         # Punktzahl des Spielers, welcher dran ist und ein Schiff des Gegner getroffen hat,
@@ -561,7 +561,7 @@ def SpielStarten(ListeVonSpielern):
 
                     # Zeigen ob ein Schiff getroffen wurde oder nicht
                     window, subwin, grid = FeldZiehen(
-                        nächsterSpieler.getField(), 'Drücken Sie eine Taste um fortzufahren')
+                        nächsterSpieler.getFeld(), 'Drücken Sie eine Taste um fortzufahren')
 
                     h, w = subwin.getmaxyx()
                     subwin.addstr(h-2, 2, '{}'.format(txt))
@@ -688,7 +688,7 @@ def SpielerVsCpu():
     cpu.SchiffePlatzieren()
 
     window, subwin, grid = FeldZiehen(
-        spieler.getField(), "Drücken Sie eine Taste um fortzufahren.", True, 'rechts')
+        spieler.getFeld(), "Drücken Sie eine Taste um fortzufahren.", True, 'rechts')
 
     y = 1
     subwin.addstr(y, 1, 'Spieler: {} platziert seine Schiffe'.format(cpu.getName()))

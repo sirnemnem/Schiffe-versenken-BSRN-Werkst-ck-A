@@ -1,13 +1,13 @@
 from classes.position import *
 
 
-class Field:
+class Feld:
 
     def __init__(self, height=10, width=10):
         self.height = height
         self.width = width
         self.positions = dict()
-        self.initField()
+        self.initFeld()
 
     #Erstellung der getter und setter Methoden
     def getHeight(self):
@@ -28,7 +28,7 @@ class Field:
     def setPositions(self, positions):
         self.positions = positions
 
-    def initField(self):
+    def initFeld(self):
         # Initialisierung des Feldes
         for x in range(self.width):
             for y in range(self.height):
