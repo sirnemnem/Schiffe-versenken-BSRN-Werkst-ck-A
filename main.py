@@ -343,7 +343,7 @@ def SchiffePlatzieren(spieler):
     SpielerSchiffe = spieler.getSchiffe().values()
     # alle Schiffe durchgehen
     for schiff in SpielerSchiffe:
-        footer = 'Geben Sie die Position für das Schiff ein (bsp.: A1:A4 = von A1 bis A4): '
+        footer = 'Geben Sie die Position für das Schiff ein (bsp.: E4:E8 = von E4 bis E8): '
 
         while 1:
             # das aktualisierte Feld des Spielers abrufen und in SpielerFeld anzeigen
@@ -535,6 +535,7 @@ def SpielStarten(ListeVonSpielern):
                 # besagter Punkt wurde noch nicht beschossen
                 if nächsterSpieler.getFeld().getValueByRef(goal) not in ['#', 'X']:
                     # Annahme, dass kein Schiff getroffen wurde getroffen
+                    # +Wert von txt mit 'VERFEHLT' besetzen, da kein Schiff getroffen wurde
                     txt = 'VERFEHLT'
 
                     if nächsterSpieler.getFeld().getValueByRef(goal) == 'O':
@@ -547,7 +548,7 @@ def SpielStarten(ListeVonSpielern):
                         nächsterSpieler.getFeld().getValueByRef(goal).gotdirektTreffer()
                         # wird Wert von diesem Punkt im Spielfeld mit 'X' besetzt
                         nächsterSpieler.getFeld().setValueByRef(goal, 'X')
-                        # +Wert von txt mit 'HIT' besetzen, da ein Schiff getroffen wurde
+                        # +Wert von txt mit 'GETROFFEN' besetzen, da ein Schiff getroffen wurde
                         txt = 'GETROFFEN'
                         # Punktzahl des Spielers, welcher dran ist und ein Schiff des Gegner getroffen hat,
                         # wird um 1 erhöht
